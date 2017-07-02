@@ -8,4 +8,4 @@ Features:
 - Checkers that can move have a wobble effect
 - Invalid moves are highlighted as you drag over the board
 
-[View Demo][https://antew.github.io/checkers]
+[View Demo](https://antew.github.io/checkers)
