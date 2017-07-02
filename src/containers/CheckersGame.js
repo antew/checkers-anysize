@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import "./CheckersGame.css";
 import Square from "../components/Square";
 import { connect } from "react-redux";
+import { CheckersConstants } from "../config/constants";
 import { checkerDragged, checkerDropped, setInstructions } from "../actions/Game";
 import { indexToCoordinate } from "../util";
 import {
@@ -48,6 +49,7 @@ class CheckersGame extends Component {
       (!activePiece || (activePiece.x === x && activePiece.y === y && availableMoves.some(move => move.isJump)));
     return (
       <Checker
+        key={piece.id}
         x={x}
         y={y}
         canDrag={canDrag}
@@ -67,11 +69,11 @@ class CheckersGame extends Component {
       if (isPlayableSpace(x, y)) {
         squares.push(
           <Square
-            key={piece.id}
+            key={`${x}-${y}`}
             isValidMove={source => isValidMove(source, { x, y }, boardState)}
             onCheckerDropped={source => checkerDropped(source, { x, y })}
           >
-            {this.renderChecker(x, y, piece)}
+            {piece !== CheckersConstants.EMPTY_SQUARE ? this.renderChecker(x, y, piece) : undefined}
           </Square>
         );
       } else {
