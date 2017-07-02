@@ -86,7 +86,7 @@ export function shouldKing(source, dest, boardState) {
     return dest.y === 0;
   }
 
-  return dest.y === Defaults.boardSize;
+  return dest.y === Defaults.boardSize - 1;
 }
 
 /**
