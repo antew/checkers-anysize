@@ -1,0 +1,11 @@
+.board {
+  display: flex;
+  flex-wrap: wrap;
+  width: 32vw;
+  border: 1px solid black;
+}
+
+.instructions {
+  padding: 10px;
+  font-size: 1.5vw;
+}

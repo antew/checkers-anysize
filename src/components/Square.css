@@ -1,0 +1,24 @@
+.square.is-over:before {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: yellow;
+  opacity: 0.25;
+}
+.square.cannot-drop:before {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: red;
+  opacity: 0.25;
+}
+.square.can-drop:before {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: green;
+  opacity: 0.25;
+}

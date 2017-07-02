@@ -1,0 +1,14 @@
+.square {
+  min-width: 4vw;
+  height: 4vw;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.square.black {
+  color: white;
+  background-color: #6092a5;
+}

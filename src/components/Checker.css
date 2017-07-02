@@ -1,0 +1,26 @@
+.checker {
+  font-size: 3vw;
+  cursor: grab;
+  border: 0;
+  margin: 0;
+}
+
+.checker.translucent {
+  opacity: 0.6;
+}
+
+.checker.moveable {
+  animation: grow 2s infinite;
+}
+
+@keyframes grow {
+  0% {
+    font-size: 3vw;
+  }
+  50% {
+    font-size: 3.25vw;
+  }
+  100% {
+    font-size: 3vw;
+  }
+}
