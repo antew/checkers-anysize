@@ -14,11 +14,12 @@ class App extends Component {
     return (
       <div className="App">
         <CheckersGame boardState={boardState} />
-        <button onClick={resetGame}>Reset Game</button>
-        <span>
-          Turn {turn.count}
-        </span>
-        <div />
+        <div className="control-panel">
+          <button onClick={resetGame}>Reset Game</button>
+          <div className="turn-counter">
+            Turn: {turn.count}
+          </div>
+        </div>
       </div>
     );
   }

@@ -4,3 +4,18 @@
   align-items: center;
   justify-content: center;
 }
+
+.control-panel {
+  margin: 20px;
+  border: 1px solid #aaa;
+  padding: 20px;
+}
+
+.control-panel button {
+  padding: 10px;
+}
+
+.control-panel .turn-counter {
+  margin-top: 10px;
+  text-align: center;
+}
