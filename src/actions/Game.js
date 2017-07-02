@@ -97,7 +97,7 @@ export const checkerDropped = (source, dest) => {
       const jumpAvailable = getAvailableMovesForPlayer(getCurrentPlayer(getState().turn.count), getState().board).some(
         move => move.isJump
       );
-      console.log("JUMP Available?", jumpAvailable);
+
       if (jumpAvailable) {
         dispatch(setAdditionalInstructions("A jump is available, you must take it."));
       }
