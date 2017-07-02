@@ -29,6 +29,6 @@ const mapStateToProps = (state, ownProps) => ({
   turn: state.turn
 });
 
-const enhance = compose(connect(mapStateToProps, { resetGame: resetGame }), DragDropContext(HTML5Backend));
+const enhance = compose(connect(mapStateToProps, { resetGame }), DragDropContext(HTML5Backend));
 
 export default enhance(App);
