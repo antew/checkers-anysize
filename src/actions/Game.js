@@ -1,4 +1,12 @@
-import { isJump, getJumpedPiece, canJump, getCurrentPlayer, getOtherPlayer, shouldKing } from "../rules/CheckersRules";
+import {
+  isJump,
+  getJumpedPiece,
+  canJump,
+  getCurrentPlayer,
+  getOtherPlayer,
+  shouldKing,
+  checkGameState
+} from "../rules/CheckersRules";
 export const GameActions = {
   CHECKER_DRAGGED: "CHECKER_DRAGGED",
   CHECKER_DROPPED: "CHECKER_DROPPED",
@@ -8,7 +16,8 @@ export const GameActions = {
   REMOVE_CHECKER: "REMOVE_CHECKER",
   ERROR_MESSAGE: "ERROR_MESSAGE",
   SET_ACTIVE_PIECE: "SET_ACTIVE_PIECE",
-  KING_PIECE: "KING_PIECE"
+  KING_PIECE: "KING_PIECE",
+  GAME_OVER: "GAME_OVER"
 };
 
 export const endTurn = () => ({
@@ -44,13 +53,10 @@ export const checkerDragged = (x, y) => {
   };
 };
 
-// export const checkerDropped = (source, dest) => {
-//   return {
-//     type: GameActions.CHECKER_DROPPED,
-//     source,
-//     dest
-//   };
-// };
+export const gameOver = finalState => dispatch => {
+  dispatch({ type: GameActions.GAME_OVER });
+  dispatch(setInstructions(`Game over! ${finalState}`));
+};
 
 export const checkerDropped = (source, dest) => {
   return (dispatch, getState) => {
@@ -75,8 +81,13 @@ export const checkerDropped = (source, dest) => {
       }
     }
 
-    dispatch(setInstructions(`${otherPlayer.name}, it is your turn.`));
-    dispatch(endTurn());
+    const gameState = checkGameState(getState().turn.count, getState().board);
+    if (gameState.gameOver) {
+      dispatch(gameOver(gameState.description));
+    } else {
+      dispatch(setInstructions(`${otherPlayer.name}, it is your turn.`));
+      dispatch(endTurn());
+    }
   };
 };
 

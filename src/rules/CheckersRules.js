@@ -1,4 +1,4 @@
-import { coordinatesToIndex } from "../util";
+import { coordinatesToIndex, indexToCoordinate } from "../util";
 import { CheckersConstants, Defaults } from "../config/constants";
 
 const ValidityChecks = {
@@ -114,4 +114,46 @@ export function getCurrentPlayer(turn) {
 
 export function getOtherPlayer(turn) {
   return getCurrentPlayer(turn) === CheckersConstants.WHITE ? CheckersConstants.BLACK : CheckersConstants.WHITE;
+}
+
+const getAvailableMovesForPlayer = (player, boardState) => {
+  return boardState
+    .map((piece, index) => {
+      const { x, y } = indexToCoordinate(index);
+      return piece.key === player.key && getValidMoves({ x, y }, boardState);
+    })
+    .filter(Boolean)
+    .reduce((a, b) => a.concat(b)); // Flatten array
+};
+export function checkGameState(turn, boardState) {
+  const currentPlayer = getCurrentPlayer(turn);
+  const otherPlayer = getOtherPlayer(turn);
+  const currentPlayerPieceCount = boardState.filter(x => x.key === currentPlayer.key).length;
+  const otherPlayerPieceCount = boardState.filter(x => x.key === otherPlayer.key).length;
+
+  const gameOver = description => ({ gameOver: true, description });
+
+  // No pieces left, game over
+  if (currentPlayerPieceCount === 0) {
+    return gameOver(`${otherPlayer.name} has won, ${currentPlayer.name} has no more pieces`);
+  }
+
+  if (otherPlayerPieceCount === 0) {
+    return gameOver(`${currentPlayer.name} has won, ${otherPlayer.name} has no more pieces`);
+  }
+
+  // If we're ending our turn and the opponent can't move then they have lost
+  const currentPlayerAvailableMoves = getAvailableMovesForPlayer(currentPlayer, boardState);
+  const otherPlayerAvailableMoves = getAvailableMovesForPlayer(otherPlayer, boardState);
+
+  if (otherPlayerAvailableMoves.length === 0) {
+    return gameOver(`${currentPlayer.name} has won, ${otherPlayer.name} can't move`);
+  }
+  if (currentPlayerAvailableMoves.length === 0) {
+    return gameOver(`${otherPlayer.name} has won, ${currentPlayer.name} can't move`);
+  }
+
+  return {
+    gameOver: false
+  };
 }

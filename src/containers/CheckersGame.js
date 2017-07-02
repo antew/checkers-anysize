@@ -29,12 +29,13 @@ class CheckersGame extends Component {
   }
 
   renderChecker(x, y, piece) {
-    const { activePiece, currentPlayerKey, boardState } = this.props;
+    const { activePiece, currentPlayerKey, boardState, gameOver } = this.props;
 
     const isCurrentPlayersPiece = currentPlayerKey === piece.key;
     const availableMoves = getValidMoves({ x, y }, boardState);
 
     const canDrag =
+      !gameOver &&
       isCurrentPlayersPiece &&
       availableMoves.length > 0 &&
       (!activePiece || (activePiece.x === x && activePiece.y === y && availableMoves.some(move => move.isJump)));
@@ -92,7 +93,8 @@ const mapStateToProps = state => ({
   currentPlayer: getCurrentPlayer(state.turn.count),
   otherPlayer: getOtherPlayer(state.turn.count),
   instructions: state.instructions,
-  activePiece: state.turn.activePiece
+  activePiece: state.turn.activePiece,
+  isGameOver: state.turn.gameOver
 });
 export default connect(mapStateToProps, {
   checkerDragged,
