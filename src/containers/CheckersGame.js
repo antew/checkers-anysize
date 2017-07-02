@@ -3,17 +3,16 @@ import PropTypes from "prop-types";
 import "./CheckersGame.css";
 import Square from "../components/Square";
 import { connect } from "react-redux";
-import {
-  checkerDragged,
-  checkerDropped,
-  removePiece,
-  endTurn,
-  setInstructions,
-  setActivePiece,
-  kingPiece
-} from "../actions/Game";
+import { checkerDragged, checkerDropped, setInstructions } from "../actions/Game";
 import { indexToCoordinate } from "../util";
-import { isValidMove, getValidMoves, isPlayableSpace, getCurrentPlayer, getOtherPlayer } from "../rules/CheckersRules";
+import {
+  isValidMove,
+  getValidMoves,
+  isPlayableSpace,
+  getAvailableMovesForPlayer,
+  getCurrentPlayer,
+  getOtherPlayer
+} from "../rules/CheckersRules";
 import BasicSquare from "../components/BasicSquare";
 
 import Checker from "../components/Checker";
@@ -29,15 +28,23 @@ class CheckersGame extends Component {
   }
 
   renderChecker(x, y, piece) {
-    const { activePiece, currentPlayerKey, boardState, gameOver } = this.props;
+    const { activePiece, currentPlayer, boardState, gameOver, availableMovesForPlayer } = this.props;
 
-    const isCurrentPlayersPiece = currentPlayerKey === piece.key;
+    const isCurrentPlayersPiece = currentPlayer.key === piece.key;
     const availableMoves = getValidMoves({ x, y }, boardState);
+
+    // If there is a jump available you must jump.  If there are multiple jump available
+    // you can choose between them
+    const availableJumps = availableMovesForPlayer.filter(move => move.isJump);
+    const thisPieceHasJumpAvailable = availableJumps.some(move => {
+      return move.source.x === x && move.source.y === y;
+    });
 
     const canDrag =
       !gameOver &&
       isCurrentPlayersPiece &&
       availableMoves.length > 0 &&
+      (!availableJumps.length || thisPieceHasJumpAvailable) &&
       (!activePiece || (activePiece.x === x && activePiece.y === y && availableMoves.some(move => move.isJump)));
     return (
       <Checker
@@ -94,14 +101,11 @@ const mapStateToProps = state => ({
   otherPlayer: getOtherPlayer(state.turn.count),
   instructions: state.instructions,
   activePiece: state.turn.activePiece,
-  isGameOver: state.turn.gameOver
+  isGameOver: state.turn.gameOver,
+  availableMovesForPlayer: getAvailableMovesForPlayer(getCurrentPlayer(state.turn.count), state.board)
 });
 export default connect(mapStateToProps, {
   checkerDragged,
   checkerDropped,
-  removePiece,
-  endTurn,
-  setInstructions,
-  setActivePiece,
-  kingPiece
+  setInstructions
 })(CheckersGame);

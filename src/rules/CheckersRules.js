@@ -69,7 +69,7 @@ export const getJumpedPiece = (source, dest, state) => {
 };
 
 export function isValidMove(source, dest, state) {
-  return Object.keys(ValidityChecks).every(func => ValidityChecks[func](source, dest, state));
+  return getValidMoves(source, state).some(move => move.x === dest.x && move.y === dest.y);
 }
 
 /**
@@ -108,25 +108,31 @@ export function getValidMoves(source, boardState) {
   }
   const dx = piece.direction;
 
-  const validMoves = [];
+  const potentialMoves = [];
   // Normal moves
-  validMoves.push({ x: x + 1, y: y + dx });
-  validMoves.push({ x: x - 1, y: y + dx });
+  potentialMoves.push({ x: x + 1, y: y + dx });
+  potentialMoves.push({ x: x - 1, y: y + dx });
 
   // Jumps
-  validMoves.push({ x: x + 2, y: y + dx + dx, isJump: true });
-  validMoves.push({ x: x - 2, y: y + dx + dx, isJump: true });
+  potentialMoves.push({ x: x + 2, y: y + dx + dx, isJump: true });
+  potentialMoves.push({ x: x - 2, y: y + dx + dx, isJump: true });
 
   if (piece.isKing) {
     // King can move in the opposite direction
-    validMoves.push({ x: x + 1, y: y - dx });
-    validMoves.push({ x: x - 1, y: y - dx });
+    potentialMoves.push({ x: x + 1, y: y - dx });
+    potentialMoves.push({ x: x - 1, y: y - dx });
 
-    validMoves.push({ x: x + 2, y: y - dx - dx, isJump: true });
-    validMoves.push({ x: x - 2, y: y - dx - dx, isJump: true });
+    potentialMoves.push({ x: x + 2, y: y - dx - dx, isJump: true });
+    potentialMoves.push({ x: x - 2, y: y - dx - dx, isJump: true });
   }
 
-  return validMoves.filter(dest => isValidMove(source, dest, boardState));
+  const validMoves = potentialMoves.filter(dest => {
+    return Object.keys(ValidityChecks).every(func => ValidityChecks[func](source, dest, boardState));
+  });
+
+  // One last filter, if there is a piece you can jump, you must jump it
+  const hasJumpAvailable = validMoves.some(move => move.isJump);
+  return hasJumpAvailable ? validMoves.filter(move => move.isJump) : validMoves;
 }
 
 export function isPlayableSpace(x, y) {
@@ -141,11 +147,23 @@ export function getOtherPlayer(turn) {
   return getCurrentPlayer(turn) === CheckersConstants.WHITE ? CheckersConstants.BLACK : CheckersConstants.WHITE;
 }
 
-const getAvailableMovesForPlayer = (player, boardState) => {
+/**
+ * Returns an array of all valid moves for a player given the current board state
+ * @param {object} player - The current player
+ * @param {array} boardState - The current board state
+ */
+export const getAvailableMovesForPlayer = (player, boardState) => {
   return boardState
     .map((piece, index) => {
       const { x, y } = indexToCoordinate(index);
-      return piece.key === player.key && getValidMoves({ x, y }, boardState);
+      if (piece.key !== player.key) {
+        return false;
+      }
+      return getValidMoves({ x, y }, boardState).map(move => ({
+        source: { x, y },
+        dest: { x: move.x, y: move.y },
+        isJump: move.isJump
+      }));
     })
     .filter(Boolean)
     .reduce((a, b) => a.concat(b)); // Flatten array
