@@ -84,13 +84,17 @@ class CheckersGame extends Component {
   }
 
   render() {
+    const { instructions, additionalInstructions } = this.props;
     return (
       <div>
         <div className="board">
           {this.createSquares()}
         </div>
         <div className="instructions">
-          {this.props.instructions}
+          {instructions}
+          <div>
+            {additionalInstructions}
+          </div>
         </div>
       </div>
     );
@@ -101,7 +105,8 @@ const mapStateToProps = state => ({
   currentPlayerKey: getCurrentPlayer(state.turn.count).key,
   currentPlayer: getCurrentPlayer(state.turn.count),
   otherPlayer: getOtherPlayer(state.turn.count),
-  instructions: state.instructions,
+  instructions: state.instructions.instructions,
+  additionalInstructions: state.instructions.additionalInstructions,
   activePiece: state.turn.activePiece,
   isGameOver: state.turn.gameOver,
   availableMovesForPlayer: getAvailableMovesForPlayer(getCurrentPlayer(state.turn.count), state.board)

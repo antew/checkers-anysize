@@ -5,7 +5,8 @@ import {
   getCurrentPlayer,
   getOtherPlayer,
   shouldKing,
-  checkGameState
+  checkGameState,
+  getAvailableMovesForPlayer
 } from "../rules/CheckersRules";
 export const GameActions = {
   CHECKER_DRAGGED: "CHECKER_DRAGGED",
@@ -13,6 +14,7 @@ export const GameActions = {
   END_TURN: "END_TURN",
   RESET_GAME: "RESET_GAME",
   SET_INSTRUCTIONS: "SET_INSTRUCTIONS",
+  SET_ADDITIONAL_INSTRUCTIONS: "SET_ADDITIONAL_INSTRUCTIONS",
   REMOVE_CHECKER: "REMOVE_CHECKER",
   ERROR_MESSAGE: "ERROR_MESSAGE",
   SET_ACTIVE_PIECE: "SET_ACTIVE_PIECE",
@@ -27,6 +29,11 @@ export const endTurn = () => ({
 export const setInstructions = instructions => ({
   type: GameActions.SET_INSTRUCTIONS,
   instructions
+});
+
+export const setAdditionalInstructions = instructions => ({
+  type: GameActions.SET_ADDITIONAL_INSTRUCTIONS,
+  additionalInstructions: instructions
 });
 
 export const setActivePiece = (x, y) => ({
@@ -67,7 +74,6 @@ export const checkerDropped = (source, dest) => {
 
     // // King the piece?
     if (shouldKing(source, dest, getState().board)) {
-      debugger;
       dispatch(kingPiece(dest.x, dest.y));
     }
 
@@ -87,6 +93,14 @@ export const checkerDropped = (source, dest) => {
     } else {
       dispatch(setInstructions(`${otherPlayer.name}, it is your turn.`));
       dispatch(endTurn());
+
+      const jumpAvailable = getAvailableMovesForPlayer(getCurrentPlayer(getState().turn.count), getState().board).some(
+        move => move.isJump
+      );
+      console.log("JUMP Available?", jumpAvailable);
+      if (jumpAvailable) {
+        dispatch(setAdditionalInstructions("A jump is available, you must take it."));
+      }
     }
   };
 };
