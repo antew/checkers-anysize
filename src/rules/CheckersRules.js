@@ -1,6 +1,9 @@
 import { coordinatesToIndex, indexToCoordinate } from "../util";
 import { CheckersConstants, Defaults } from "../config/constants";
 
+/**
+ * Checkers rules for moves
+ */
 const ValidityChecks = {
   mustNotBeTheSameSquare(source, dest) {
     return source.x !== dest.x || source.y !== dest.y;
@@ -12,6 +15,8 @@ const ValidityChecks = {
     const { x, y } = dest;
     return state[coordinatesToIndex(x, y)] === 0;
   },
+  // Black moves up the board, White moves down the board
+  // Kings can move both up and down
   mustBeInTheCorrectDirection(source, dest, state) {
     const dy = dest.y - source.y;
     const index = coordinatesToIndex(source.x, source.y);
@@ -24,9 +29,11 @@ const ValidityChecks = {
 
     return allowedDirection === -1 ? dy < 0 : dy > 0;
   },
+  // Unless we're jumping another piece we should only move 1 square in the X and Y direction
   mustBeInRange(source, dest, state) {
     return isJump(source, dest, state) || (Math.abs(dest.y - source.y) === 1 && Math.abs(dest.x - source.x) === 1);
   },
+  // Gotta be within the bounds of the board
   mustBeInBounds(source, dest, state) {
     const boardSize = Defaults.boardSize;
     const isWithinBounds = ({ x, y }) => x >= 0 && x < boardSize && y >= 0 && y < boardSize;
@@ -38,6 +45,12 @@ export const isJump = (source, dest, state) => {
   return !!getJumpedPiece(source, dest, state);
 };
 
+/**
+ * Returns the piece that was jumped (if any)
+ * @param {object} source - The start of the move
+ * @param {object} dest - The end of the move
+ * @param {array} state - The current state of the board
+ */
 export const getJumpedPiece = (source, dest, state) => {
   const isMovingTwoSquares = Math.abs(dest.x - source.x) === 2 && Math.abs(dest.y - source.y) === 2;
   const dx = dest.x - source.x;
@@ -59,6 +72,12 @@ export function isValidMove(source, dest, state) {
   return Object.keys(ValidityChecks).every(func => ValidityChecks[func](source, dest, state));
 }
 
+/**
+ * Whether we should turn the moved piece into a King
+ * @param {object} source - The start of the move
+ * @param {object} dest - The end of the move
+ * @param {array} state - The current state of the board
+ */
 export function shouldKing(source, dest, boardState) {
   const destIndex = coordinatesToIndex(dest.x, dest.y);
   const state = boardState[destIndex];
@@ -70,6 +89,12 @@ export function shouldKing(source, dest, boardState) {
   return dest.y === Defaults.boardSize;
 }
 
+/**
+ * Whether there are any pieces we can jump.  This is needed for continuation
+ * moves where you are making a double or triple jump
+ * @param {object} source - The board square to search from
+ * @param {*} boardState - The current state of the board
+ */
 export function canJump(source, boardState) {
   return getValidMoves(source, boardState).filter(move => move.isJump).length > 0;
 }
@@ -125,6 +150,12 @@ const getAvailableMovesForPlayer = (player, boardState) => {
     .filter(Boolean)
     .reduce((a, b) => a.concat(b)); // Flatten array
 };
+
+/**
+ * 
+ * @param {number} turn - The turn number
+ * @param {array} boardState - The current state of the board
+ */
 export function checkGameState(turn, boardState) {
   const currentPlayer = getCurrentPlayer(turn);
   const otherPlayer = getOtherPlayer(turn);
