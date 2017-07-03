@@ -62,7 +62,6 @@ class CheckersGame extends Component {
 
   createSquares() {
     const { boardState, checkerDropped } = this.props;
-    const squares = [];
     return boardState.map((piece, i) => {
       const { x, y } = indexToCoordinate(i);
       if (isPlayableSpace(x, y)) {

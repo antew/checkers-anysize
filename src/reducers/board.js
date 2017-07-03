@@ -1,5 +1,5 @@
 import { GameActions } from "../actions/Game.js";
-import { coordinatesToIndex, indexToCoordinate } from "../util";
+import { coordinatesToIndex } from "../util";
 import { Defaults, CheckersConstants } from "../config/constants";
 import { generateBoard } from "../rules/CheckersRules";
 

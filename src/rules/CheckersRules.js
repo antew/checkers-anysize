@@ -1,5 +1,5 @@
 import { coordinatesToIndex, indexToCoordinate } from "../util";
-import { CheckersConstants, Defaults } from "../config/constants";
+import { CheckersConstants } from "../config/constants";
 
 /**
  * Checkers rules for moves

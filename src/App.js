@@ -3,7 +3,6 @@ import "./App.css";
 import CheckersGame from "./containers/CheckersGame";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import { Defaults } from "./config/constants";
 
 import { connect } from "react-redux";
 import { compose } from "redux";
