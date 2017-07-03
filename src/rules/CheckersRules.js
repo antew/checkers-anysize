@@ -35,7 +35,7 @@ const ValidityChecks = {
   },
   // Gotta be within the bounds of the board
   mustBeInBounds(source, dest, state) {
-    const boardSize = Defaults.boardSize;
+    const boardSize = window.boardSize;
     const isWithinBounds = ({ x, y }) => x >= 0 && x < boardSize && y >= 0 && y < boardSize;
     return isWithinBounds(source) && isWithinBounds(dest);
   }
@@ -86,7 +86,7 @@ export function shouldKing(source, dest, boardState) {
     return dest.y === 0;
   }
 
-  return dest.y === Defaults.boardSize - 1;
+  return dest.y === window.boardSize - 1;
 }
 
 /**
@@ -154,11 +154,9 @@ export function getOtherPlayer(turn) {
  */
 export const getAvailableMovesForPlayer = (player, boardState) => {
   return boardState
-    .map((piece, index) => {
+    .map((piece, index, full) => {
+      console.log("FULL", full);
       const { x, y } = indexToCoordinate(index);
-      if (piece.key !== player.key) {
-        return false;
-      }
       return getValidMoves({ x, y }, boardState).map(move => ({
         source: { x, y },
         dest: { x: move.x, y: move.y },
@@ -166,7 +164,7 @@ export const getAvailableMovesForPlayer = (player, boardState) => {
       }));
     })
     .filter(Boolean)
-    .reduce((a, b) => a.concat(b)); // Flatten array
+    .reduce((a, b) => a.concat(b), []); // Flatten array
 };
 
 /**
@@ -206,3 +204,35 @@ export function checkGameState(turn, boardState) {
     gameOver: false
   };
 }
+
+export const generateBoard = size => {
+  const W = CheckersConstants.WHITE;
+  const B = CheckersConstants.BLACK;
+  // 'O' for brevity in the initialState here
+  const O = CheckersConstants.EMPTY_SQUARE;
+  const EMPTY_SQUARE = CheckersConstants.EMPTY_SQUARE;
+
+  let board = [];
+  for (let i = 0; i < size * size; i++) {
+    let { x, y } = indexToCoordinate(i);
+    let elem;
+
+    if (isPlayableSpace(x, y)) {
+      if (y < 3) {
+        elem = W;
+      } else if (size - y - 1 < 3) {
+        elem = B;
+      } else {
+        elem = O;
+      }
+    } else {
+      elem = O;
+    }
+    board.push(elem);
+  }
+
+  // For react-dnd to track our pieces we need stable IDs,
+  // so this assigns them in the initial state
+  console.log("Generated board", board);
+  return board.map((x, index) => (x === EMPTY_SQUARE ? x : { ...x, id: index }));
+};

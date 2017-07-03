@@ -63,11 +63,10 @@ class CheckersGame extends Component {
   createSquares() {
     const { boardState, checkerDropped } = this.props;
     const squares = [];
-    for (let i = 0; i < 64; i++) {
-      const piece = boardState[i];
+    return boardState.map((piece, i) => {
       const { x, y } = indexToCoordinate(i);
       if (isPlayableSpace(x, y)) {
-        squares.push(
+        return (
           <Square
             key={`${x}-${y}`}
             isValidMove={source => isValidMove(source, { x, y }, boardState)}
@@ -76,18 +75,17 @@ class CheckersGame extends Component {
             {piece !== CheckersConstants.EMPTY_SQUARE ? this.renderChecker(x, y, piece) : undefined}
           </Square>
         );
-      } else {
-        squares.push(<BasicSquare key={`${x}-${y}`} />);
       }
-    }
-    return squares;
+
+      return <BasicSquare key={`${x}-${y}`} />;
+    });
   }
 
   render() {
     const { instructions, additionalInstructions } = this.props;
     return (
       <div>
-        <div className="board">
+        <div className="board" style={{ width: `${4 * window.boardSize}vw` }}>
           {this.createSquares()}
         </div>
         <div className="instructions">

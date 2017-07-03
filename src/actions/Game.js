@@ -19,7 +19,8 @@ export const GameActions = {
   ERROR_MESSAGE: "ERROR_MESSAGE",
   SET_ACTIVE_PIECE: "SET_ACTIVE_PIECE",
   KING_PIECE: "KING_PIECE",
-  GAME_OVER: "GAME_OVER"
+  GAME_OVER: "GAME_OVER",
+  UPDATE_BOARD_SIZE: "UPDATE_BOARD_SIZE"
 };
 
 export const endTurn = () => ({
@@ -116,5 +117,11 @@ export const removePiece = (x, y) => {
 export const resetGame = () => {
   return {
     type: GameActions.RESET_GAME
+  };
+};
+
+export const updateBoardSize = size => {
+  return dispatch => {
+    dispatch({ type: GameActions.UPDATE_BOARD_SIZE, size });
   };
 };

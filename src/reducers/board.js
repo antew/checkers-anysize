@@ -1,33 +1,21 @@
 import { GameActions } from "../actions/Game.js";
-import { coordinatesToIndex } from "../util";
-import { CheckersConstants } from "../config/constants";
+import { coordinatesToIndex, indexToCoordinate } from "../util";
+import { Defaults, CheckersConstants } from "../config/constants";
+import { generateBoard } from "../rules/CheckersRules";
 
-const W = CheckersConstants.WHITE;
-const B = CheckersConstants.BLACK;
-// 'O' for brevity in the initialState here
-const O = CheckersConstants.EMPTY_SQUARE;
+// Todo, replace hackyness, right now some utility functions
+// require the board size but are not connected to redux
+window.boardSize = Defaults.boardSize;
+const initialState = generateBoard(window.boardSize);
 const EMPTY_SQUARE = CheckersConstants.EMPTY_SQUARE;
-
-/* prettier-ignore */
-const initialState = [
-  O, W, O, W, O, W, O, W,
-  W, O, W, O, W, O, W, O,
-  O, W, O, W, O, W, O, W,
-  O, O, O, O, O, O, O, O,
-  O, O, O, O, O, O, O, O,
-  B, O, B, O, B, O, B, O,
-  O, B, O, B, O, B, O, B,
-  B, O, B, O, B, O, B, O,
-]
-// For react-dnd to track our pieces we need stable IDs,
-// so this assigns them in the initial state
-.map((x, index) => x === EMPTY_SQUARE ? x : { ...x, id: index });
-
 export default (state = initialState, action) => {
   switch (action.type) {
     case GameActions.RESET_GAME:
       return initialState;
 
+    case GameActions.UPDATE_BOARD_SIZE:
+      window.boardSize = action.size || 8;
+      return generateBoard(action.size);
     case GameActions.CHECKER_DRAGGED:
       return state;
 
