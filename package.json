@@ -2,7 +2,7 @@
   "name": "checkers",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://antew.github.io/checkers",
+  "homepage": "https://antew.github.io/checkers-anysize",
   "dependencies": {
     "classnames": "^2.2.5",
     "gh-pages": "^1.0.0",
