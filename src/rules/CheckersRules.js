@@ -63,7 +63,7 @@ export const getJumpedPiece = (source, dest, state) => {
   const sourcePiece = state[coordinatesToIndex(source.x, source.y)];
   const jumpPiece = state[jumpCoords];
 
-  if (isMovingTwoSquares && jumpPiece !== 0 && sourcePiece.key !== jumpPiece.key) {
+  if (isMovingTwoSquares && jumpPiece !== CheckersConstants.EMPTY_SQUARE && sourcePiece.key !== jumpPiece.key) {
     return { x: jumpX, y: jumpY };
   }
 };
@@ -155,7 +155,6 @@ export function getOtherPlayer(turn) {
 export const getAvailableMovesForPlayer = (player, boardState) => {
   return boardState
     .map((piece, index, full) => {
-      console.log("FULL", full);
       const { x, y } = indexToCoordinate(index);
       return getValidMoves({ x, y }, boardState).map(move => ({
         source: { x, y },
@@ -233,6 +232,5 @@ export const generateBoard = size => {
 
   // For react-dnd to track our pieces we need stable IDs,
   // so this assigns them in the initial state
-  console.log("Generated board", board);
   return board.map((x, index) => (x === EMPTY_SQUARE ? x : { ...x, id: index }));
 };

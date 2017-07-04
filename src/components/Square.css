@@ -5,6 +5,8 @@
   position: absolute;
   background-color: yellow;
   opacity: 0.25;
+  left: 0;
+  top: 0;
 }
 .square.cannot-drop:before {
   content: '';
@@ -13,6 +15,8 @@
   position: absolute;
   background-color: red;
   opacity: 0.25;
+  left: 0;
+  top: 0;
 }
 .square.can-drop:before {
   content: '';
@@ -21,4 +25,6 @@
   position: absolute;
   background-color: green;
   opacity: 0.25;
+  left: 0;
+  top: 0;
 }
