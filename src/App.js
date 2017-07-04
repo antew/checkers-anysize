@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import "./App.css";
 import CheckersGame from "./containers/CheckersGame";
 import { DragDropContext } from "react-dnd";
@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 
 import { resetGame, updateBoardSize } from "./actions/Game";
-class App extends Component {
+class App extends PureComponent {
   render() {
     const { boardState, resetGame, turn, updateBoardSize } = this.props;
     return (

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import "./Checker.css";
 import classNames from "classnames";
@@ -24,7 +24,7 @@ function collect(connect, monitor) {
   };
 }
 
-class Checker extends Component {
+class Checker extends PureComponent {
   static propTypes = {
     symbol: PropTypes.string.isRequired,
     connectDragSource: PropTypes.func.isRequired,

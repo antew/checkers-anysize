@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import "./CheckersGame.css";
 import Square from "../components/Square";
@@ -18,7 +18,7 @@ import BasicSquare from "../components/BasicSquare";
 
 import Checker from "../components/Checker";
 
-class CheckersGame extends Component {
+class CheckersGame extends PureComponent {
   static propTypes = {
     size: PropTypes.number
   };

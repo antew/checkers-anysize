@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { DropTarget } from "react-dnd";
 import "./Square.css";
@@ -25,7 +25,7 @@ function collect(connect, monitor) {
   };
 }
 
-class Square extends Component {
+class Square extends PureComponent {
   static propTypes = {
     isOver: PropTypes.bool.isRequired,
     canDrop: PropTypes.bool.isRequired,
