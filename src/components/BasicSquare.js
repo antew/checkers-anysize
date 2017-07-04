@@ -11,10 +11,13 @@ export default class BasicSquare extends PureComponent {
   };
 
   render() {
-    const { black, children, classes } = this.props;
+    const { black, children, classes, size } = this.props;
 
     return (
-      <div className={classNames("square", { black: black }, classes)}>
+      <div
+        style={{ height: `${size}vw`, minWidth: `${size}vw` }}
+        className={classNames("square", { black: black }, classes)}
+      >
         {children}
       </div>
     );
